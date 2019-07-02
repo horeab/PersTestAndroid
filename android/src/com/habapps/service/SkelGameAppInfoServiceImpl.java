@@ -10,6 +10,11 @@ public class SkelGameAppInfoServiceImpl implements AppInfoService {
 
     private AndroidLauncher activity;
 
+    @Override
+    public boolean isPortraitMode() {
+        return false;
+    }
+
     public SkelGameAppInfoServiceImpl(AndroidLauncher activity) {
         this.activity = activity;
     }

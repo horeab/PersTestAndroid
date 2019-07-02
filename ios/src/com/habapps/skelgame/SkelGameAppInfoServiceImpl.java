@@ -19,8 +19,13 @@ public class SkelGameAppInfoServiceImpl implements AppInfoService {
     }
 
     @Override
-    public boolean isProVersion() {
+    public boolean isPortraitMode() {
         return false;
+    }
+
+    @Override
+    public boolean isProVersion() {
+        return true;
     }
 
     @Override
@@ -80,9 +85,9 @@ public class SkelGameAppInfoServiceImpl implements AppInfoService {
 
     @Override
     public float gameScreenTopMargin() {
-        if (screenShotMode()) {
+        if (screenShotMode() ) {
             return 0;
         }
-        return iosLauncher.getSafeAreaInsets() + iosLauncher.getBannerAdHeight();
+        return iosLauncher.getSafeAreaInsets() ;
     }
 }

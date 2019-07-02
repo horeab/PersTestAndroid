@@ -11,7 +11,7 @@ android {
             res.srcDirs = ['res']
             jniLibs.srcDirs = ['libs']
         }
-        skelgame {
+        perstest {
             assets.srcDirs = ['assets/tournament_resources/implementations/skelgame', 'assets/tournament_resources/main', 'assets/main_resources/main']
         }
     }
@@ -51,12 +51,12 @@ android {
     flavorDimensions "game"
     productFlavors {
 /////////////////////////////////////////////////////////////////////////////
-        skelgame {
-            applicationIdSuffix ".skelgame"
+        perstest {
+            applicationIdSuffix ".perstest"
             versionCode 1
             versionName "1.00"
             dimension "game"
-            manifestPlaceholders = [appIcon: "@drawable/skelgame_icon"]
+            manifestPlaceholders = [appIcon: "@drawable/perstest_icon"]
         }
 /////////////////////////////////////////////////////////////////////////////
     }

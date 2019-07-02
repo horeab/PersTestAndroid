@@ -20,6 +20,7 @@ import org.robovm.pods.google.mobileads.GADInterstitialDelegateAdapter;
 import org.robovm.pods.google.mobileads.GADRequest;
 import org.robovm.pods.google.mobileads.GADRequestError;
 
+import libgdx.implementations.skel.SkelGame;
 import libgdx.utils.startgame.test.DefaultBillingService;
 import libgdx.utils.startgame.test.DefaultFacebookService;
 
@@ -40,9 +41,9 @@ public class IOSLauncher extends IOSApplication.Delegate {
     @Override
     protected IOSApplication createApplication() {
         final IOSApplicationConfiguration config = new IOSApplicationConfiguration();
-        config.orientationLandscape = false;
-        config.orientationPortrait = true;
         appInfoService = new SkelGameAppInfoServiceImpl(this);
+        config.orientationLandscape = !appInfoService.isPortraitMode();
+        config.orientationPortrait = appInfoService.isPortraitMode();
         iosApplication = new IOSApplication(
                 new SkelGame(
                         new DefaultFacebookService(),
@@ -74,7 +75,7 @@ public class IOSLauncher extends IOSApplication.Delegate {
     public boolean didFinishLaunching(UIApplication application, UIApplicationLaunchOptions launchOptions) {
         boolean finishLaunching = super.didFinishLaunching(application, launchOptions);
 
-        if (!appInfoService.screenShotMode()) {
+        if (!appInfoService.screenShotMode() && !appInfoService.isProVersion()) {
             initializeAds(iosApplication);
         }
         return finishLaunching;
@@ -139,7 +140,7 @@ public class IOSLauncher extends IOSApplication.Delegate {
     }
 
     public void showPopupAd() {
-        if (!appInfoService.screenShotMode()) {
+        if (!appInfoService.screenShotMode() && !appInfoService.isProVersion()) {
             if (interstitialAd.isReady()) {
                 interstitialAd.present(UIApplication.getSharedApplication().getKeyWindow().getRootViewController());
             } else {
