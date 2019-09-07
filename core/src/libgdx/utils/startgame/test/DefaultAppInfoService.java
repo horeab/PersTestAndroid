@@ -20,12 +20,12 @@ public class DefaultAppInfoService implements AppInfoService {
     }
 
     @Override
-    public void showRewardedVideoAd() {
+    public String getProVersionStoreAppId() {
+        return null;
     }
 
     @Override
-    public String proVersionStoreAppId() {
-        return getStoreAppId();
+    public void showRewardedVideoAd() {
     }
 
     @Override

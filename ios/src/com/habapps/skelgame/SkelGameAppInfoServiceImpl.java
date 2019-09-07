@@ -25,12 +25,12 @@ public class SkelGameAppInfoServiceImpl implements AppInfoService {
 
     @Override
     public boolean isProVersion() {
-        return true;
+        return false;
     }
 
     @Override
-    public String proVersionStoreAppId() {
-        return null;
+    public String getProVersionStoreAppId() {
+        return "1471197175";
     }
 
     @Override

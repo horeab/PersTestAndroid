@@ -68,7 +68,7 @@ public class IOSLauncher extends IOSApplication.Delegate {
             UIView view = UIApplication.getSharedApplication().getKeyWindow().getRootViewController().getView();
             topMargin = view.getSafeAreaInsets().getBottom();
         }
-        return Math.abs((float) topMargin);
+        return 0;
     }
 
     @Override

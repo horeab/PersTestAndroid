@@ -52,7 +52,7 @@ public class ButtonBuilder {
     }
 
     protected LabelImage createTextTable(String text, float fontScale) {
-        return createTextTable(text, new GlyphLayout(FontManager.getFont(), text).width, fontScale);
+        return createTextTable(text, new GlyphLayout(Game.getInstance().getFontManager().getFont(), text).width, fontScale);
     }
 
     protected LabelImage createTextTable(String text, float tableWidth, float fontScale) {
@@ -228,7 +228,7 @@ public class ButtonBuilder {
         }
     }
 
-    private ButtonSize getButtonSize() {
+    protected ButtonSize getButtonSize() {
         if (fixedButtonSize != null) {
             return fixedButtonSize;
         }
@@ -261,15 +261,4 @@ public class ButtonBuilder {
         }
         return isTableEmpty;
     }
-
-    public LabelImage createTableLabelImage(String text, Res icon) {
-        return new LabelImage(new LabelImageConfigBuilder()
-                .setImage(icon)
-                .setWrappedLineLabel(getButtonSize().getWidth() - LabelImageConfigBuilder.DEFAULT_IMAGE_SIDE_DIMENSION * 2f)
-                .setMarginBetweenLabelImage(MainDimen.horizontal_general_margin.getDimen())
-                .setText(text)
-                .setAlignTextRight(true)
-                .build());
-    }
-
 }

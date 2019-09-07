@@ -8,6 +8,8 @@ public interface AppInfoService {
 
     String getStoreAppId();
 
+    String getProVersionStoreAppId();
+
     String getLanguage();
 
     boolean googleFacebookLoginEnabled();
@@ -25,8 +27,6 @@ public interface AppInfoService {
     boolean screenShotMode();
 
     float gameScreenTopMargin();
-
-    String proVersionStoreAppId();
 
     boolean isProVersion();
 

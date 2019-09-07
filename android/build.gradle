@@ -14,6 +14,9 @@ android {
         perstest {
             assets.srcDirs = ['assets/tournament_resources/implementations/skelgame', 'assets/tournament_resources/main', 'assets/main_resources/main']
         }
+        perstestPro {
+            assets.srcDirs = ['assets/tournament_resources/implementations/skelgame', 'assets/tournament_resources/main', 'assets/main_resources/main']
+        }
     }
     lintOptions {
         checkReleaseBuilds false
@@ -53,10 +56,18 @@ android {
 /////////////////////////////////////////////////////////////////////////////
         perstest {
             applicationIdSuffix ".perstest"
-            versionCode 1
-            versionName "1.00"
+            versionCode 3
+            versionName "1.11"
             dimension "game"
             manifestPlaceholders = [appIcon: "@drawable/perstest_icon"]
+        }
+/////////////////////////////////////////////////////////////////////////////
+        perstestPro {
+            applicationIdSuffix ".perstestPro"
+            versionCode 1
+            versionName "1.0"
+            dimension "game"
+            manifestPlaceholders = [appIcon: "@drawable/perstestpro_icon"]
         }
 /////////////////////////////////////////////////////////////////////////////
     }

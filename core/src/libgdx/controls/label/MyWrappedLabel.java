@@ -1,8 +1,10 @@
 package libgdx.controls.label;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
@@ -10,7 +12,6 @@ import com.badlogic.gdx.utils.Array;
 import java.util.ArrayList;
 import java.util.List;
 
-import libgdx.constants.ScreenContrast;
 import libgdx.controls.TextTable;
 import libgdx.game.Game;
 import libgdx.resources.FontManager;
@@ -55,9 +56,9 @@ public class MyWrappedLabel extends TextTable {
         }
     }
 
-    public void setStyle(String style) {
+    public void setStyle(Color color) {
         for (MyLabel myLabel : getLabels()) {
-            myLabel.setStyle(style);
+            myLabel.getStyle().font = getFont(color);
         }
     }
 
@@ -80,7 +81,7 @@ public class MyWrappedLabel extends TextTable {
             addSingleLineLabel(text);
         } else {
             List<String> wrappedLines = new ArrayList<>();
-            BitmapFont font = FontManager.getFont();
+            BitmapFont font = getFont(myWrappedLabelConfig.getTextColor());
             font.getData().setScale(myWrappedLabelConfig.getFontScale());
             try {
                 GlyphLayout glyphLayout = new GlyphLayout(font, text, Color.RED, myWrappedLabelConfig.getWidth(), Align.center, true);
@@ -106,10 +107,17 @@ public class MyWrappedLabel extends TextTable {
     private MyLabel configLabel(String text) {
         MyLabel label = new MyLabel(text);
         label.setFontScale(myWrappedLabelConfig.getFontScale());
-        label.setStyle(myWrappedLabelConfig.getTextStyle());
         label.setAlignment(Align.center);
+
+        Label.LabelStyle labelStyle = new Label.LabelStyle();
+        labelStyle.font = getFont(myWrappedLabelConfig.getTextColor());
+        label.setStyle(labelStyle);
         rowLabels.add(label);
         return label;
+    }
+
+    private BitmapFont getFont(Color textColor) {
+        return Game.getInstance().getFontManager().getFont(textColor);
     }
 
     private String getGlyphsString(Array<BitmapFont.Glyph> glyphs) {
@@ -125,7 +133,7 @@ public class MyWrappedLabel extends TextTable {
         setStyle(MyWrappedLabelConfigBuilder.getScreenContrastStyle());
     }
 
-    public void setStyleDependingOnContrast(String darkContrastStyle, String lightContrastStyle) {
+    public void setStyleDependingOnContrast(Color darkContrastStyle, Color lightContrastStyle) {
         setStyle(MyWrappedLabelConfigBuilder.getScreenContrastStyle(darkContrastStyle, lightContrastStyle));
     }
 }

@@ -80,8 +80,8 @@ public class SkelGameAppInfoServiceImpl implements AppInfoService {
     }
 
     @Override
-    public String proVersionStoreAppId() {
-        return null;
+    public String getProVersionStoreAppId() {
+        return activity.getPackageName() + "Pro";
     }
 
     @Override

@@ -126,6 +126,7 @@ public abstract class AbstractScreen<TScreenManager extends AbstractScreenManage
         contentStage.addActor(contentContainer);
 
         Container<Group> backgroundContainer = createFullScreenContainer();
+        setBackgroundContainer(backgroundContainer);
         backgroundStage.addActor(backgroundContainer);
     }
 

@@ -5,19 +5,16 @@ import libgdx.resources.properties.PropertiesUtils;
 
 public enum MainGameLabel implements GameLabel {
 
+    font_name,
     loading,
-    privacy_policy,
-
-    facebook_share_btn,
 
     rate_rate_now,
     rate_rate_later,
     rate_message,
 
-    sound_on,
-    sound_off,
-
-    billing_remove_ads,;
+    billing_remove_ads,
+    pro_version_info,
+    pro_version_download,;
 
     @Override
     public String getText(Object... params) {

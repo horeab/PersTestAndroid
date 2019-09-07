@@ -9,12 +9,12 @@ public enum GameProperties {
     skelgame(
             GameIdEnum.skelgame,
             NSBundle.getMainBundle().getLocalizedString("language","en","InfoPlist"),
-            "The Big Five Personality Test",
+            NSBundle.getMainBundle().getLocalizedString("CFBundleDisplayName","en","InfoPlist"),
             "ca-app-pub-9432399956064043~8530693221",
             "ca-app-pub-9432399956064043/5904529883",
             "ca-app-pub-9432399956064043/5712958192",
             "ca-app-pub-9432399956064043/2703651470",
-            "1471197175");
+            "1479288929");
 
     private GameIdEnum gameIdEnum;
     private String language;

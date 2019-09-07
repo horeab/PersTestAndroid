@@ -1,6 +1,7 @@
 package libgdx.screens.mainmenu;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -16,6 +17,7 @@ import libgdx.controls.label.MyWrappedLabel;
 import libgdx.controls.label.MyWrappedLabelConfig;
 import libgdx.controls.label.MyWrappedLabelConfigBuilder;
 import libgdx.controls.popup.MyPopup;
+import libgdx.controls.popup.ProVersionPopup;
 import libgdx.game.Game;
 import libgdx.graphics.GraphicUtils;
 import libgdx.implementations.skel.SkelGameButtonSize;
@@ -32,6 +34,7 @@ import libgdx.screens.model.Question;
 import libgdx.screens.service.QuestionService;
 import libgdx.screens.service.StateManager;
 import libgdx.utils.ScreenDimensionsManager;
+import libgdx.utils.Utils;
 
 public class MainMenuScreen extends AbstractScreen {
 
@@ -97,7 +100,10 @@ public class MainMenuScreen extends AbstractScreen {
 
     private void goToLevel(int qNr) {
         currentGame.setCurrentQuestion(qNr);
-        if (qNr == 30 || qNr == 46 || qNr == 13) {
+
+        if (qNr == 13 && !Game.getInstance().getAppInfoService().isProVersion()) {
+            new ProVersionPopup(Game.getInstance().getAbstractScreen()).addToPopupManager();
+        } else if (qNr == 30 || qNr == 46) {
             Game.getInstance().getAppInfoService().showPopupAd();
         }
         if (isGameOver(qNr)) {
@@ -169,13 +175,17 @@ public class MainMenuScreen extends AbstractScreen {
             }
 
         });
-        MyButton info = new ButtonBuilder().setSingleLineText("Info", btnFontScale).setButtonSkin(MainButtonSkin.DEFAULT).setFixedButtonSize(SkelGameButtonSize.HEADER_BUTTON).build();
+        MyButton info = new ButtonBuilder().setSingleLineText(SkelGameLabel.infoBtn.getText(), btnFontScale).setButtonSkin(MainButtonSkin.DEFAULT).setFixedButtonSize(SkelGameButtonSize.HEADER_BUTTON).build();
         final AbstractScreen screen = this;
         info.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                MyPopup popup = popup();
-                popup.addToPopupManager();
+                if (Game.getInstance().getAppInfoService().screenShotMode()) {
+                    Utils.createChangeLangPopup();
+                } else {
+                    MyPopup popup = popup();
+                    popup.addToPopupManager();
+                }
             }
 
             private MyPopup popup() {
@@ -221,7 +231,7 @@ public class MainMenuScreen extends AbstractScreen {
         float dimen = MainDimen.horizontal_general_margin.getDimen();
         table.add(new MyWrappedLabel(new MyWrappedLabelConfigBuilder().setText(((currentGame.getCurrentQuestionIndex() + 1) + "/" + currentGame.getQuestions().size())).setFontScale(FontManager.calculateMultiplierStandardFontSize(2.7f)).setSingleLineLabel().build())).pad(dimen);
         table.add().growX();
-        table.add(newGame).width(newGame.getWidth()).height(newGame.getHeight());
+        table.add(newGame).width(newGame.getWidth() * 1.7f).height(newGame.getHeight());
         table.add(info).pad(dimen).width(info.getWidth()).height(info.getHeight());
         return table;
     }
@@ -281,7 +291,7 @@ public class MainMenuScreen extends AbstractScreen {
     }
 
     private MyWrappedLabelConfig getAnswerInfoLabel(String text) {
-        return new MyWrappedLabelConfigBuilder().setTextStyle(ResourcesManager.getLabelGrey()).setFontScale(FontManager.calculateMultiplierStandardFontSize(2f)).setText(text).build();
+        return new MyWrappedLabelConfigBuilder().setTextColor(Color.GRAY).setFontScale(FontManager.calculateMultiplierStandardFontSize(2f)).setText(text).build();
     }
 
     @Override

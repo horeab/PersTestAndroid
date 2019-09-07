@@ -2,6 +2,7 @@ package libgdx.game;
 
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.utils.I18NBundle;
 
 import libgdx.game.external.AppInfoService;
@@ -39,6 +40,7 @@ public abstract class Game<
     private TSubGameDependencyManager subGameDependencyManager;
     private TMainDependencyManager mainDependencyManager;
     protected TScreenManager screenManager;
+    private FontManager fontManager;
 
     public Game(FacebookService facebookService,
                 BillingService billingService,
@@ -61,6 +63,12 @@ public abstract class Game<
         return hasInternet;
     }
 
+    public void setNewContext(TAppInfoService newAppInfoService) {
+        this.appInfoService = newAppInfoService;
+        fontManager = new FontManager();
+        screenManager.showMainScreen();
+    }
+
     @Override
     public void create() {
         initAssetManager();
@@ -69,8 +77,7 @@ public abstract class Game<
 
     public void executeAfterAssetsLoaded() {
         displayScreenAfterAssetsLoad();
-        FontManager.getFont().getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-        FontManager.getBigFont().getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+        fontManager = new FontManager();
     }
 
     public TMainDependencyManager getMainDependencyManager() {
@@ -91,6 +98,10 @@ public abstract class Game<
                 assetManager.load(path, classType);
             }
         }
+    }
+
+    public FontManager getFontManager() {
+        return fontManager;
     }
 
     public TAppInfoService getAppInfoService() {

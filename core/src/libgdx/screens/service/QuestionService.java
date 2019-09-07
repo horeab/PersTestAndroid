@@ -28,7 +28,7 @@ public class QuestionService {
         return result;
     }
 
-    private List<String> allQuestions() {
+    public List<String> allQuestions() {
         List<String> set = new ArrayList<>();
         Scanner scanner = new Scanner(Gdx.files.internal(getQuestionFilePath()).readString());
         while (scanner.hasNextLine()) {
@@ -40,7 +40,7 @@ public class QuestionService {
     }
 
     private String getQuestionFilePath() {
-        return Game.getInstance().getAppInfoService().getImplementationGameResourcesFolder() + "questions/questions.txt";
+        return Game.getInstance().getAppInfoService().getImplementationGameResourcesFolder() + "questions/" + Game.getInstance().getAppInfoService().getLanguage() + "_questions.txt";
     }
 
     public int calculateE(List<Question> questions) {
