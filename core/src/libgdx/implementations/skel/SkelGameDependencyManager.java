@@ -19,6 +19,11 @@ public class SkelGameDependencyManager extends CampaignGameDependencyManager {
     }
 
     @Override
+    protected String allQuestionText() {
+        return "";
+    }
+
+    @Override
     public Class<SkelGameSpecificResource> getSpecificResourceTypeEnum() {
         return SkelGameSpecificResource.class;
     }
@@ -36,6 +41,12 @@ public class SkelGameDependencyManager extends CampaignGameDependencyManager {
     @Override
     public Class<LettersQuestionDifficultyLevel> getQuestionDifficultyTypeEnum() {
         return LettersQuestionDifficultyLevel.class;
+    }
+
+
+    @Override
+    public String getExtraContentProductId() {
+        return "extraContentPerstest";
     }
 
     public StarsService getStarsService() {

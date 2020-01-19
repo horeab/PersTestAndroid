@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
@@ -13,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import libgdx.constants.Contrast;
 import libgdx.transactions.TransactionAmount;
 import libgdx.controls.label.MyLabel;
 import libgdx.controls.labelimage.InventoryTableBuilder;
@@ -22,6 +24,7 @@ import libgdx.game.Game;
 import libgdx.resources.FontManager;
 import libgdx.resources.Res;
 import libgdx.resources.dimen.MainDimen;
+import libgdx.utils.model.FontColor;
 
 public class ButtonBuilder {
 
@@ -39,6 +42,8 @@ public class ButtonBuilder {
     private List<ChangeListener> changeListeners = new ArrayList<>();
     private String buttonName;
     private boolean disabled;
+    private Contrast contrast = Contrast.LIGHT;
+    private Float fontScale;
 
     public ButtonBuilder() {
     }
@@ -73,11 +78,25 @@ public class ButtonBuilder {
     }
 
     public ButtonBuilder setWrappedText(String text, float width) {
-        return setWrappedText(new LabelImageConfigBuilder().setText(text).setFontScale(FontManager.getNormalFontDim()).setWrappedLineLabel(width));
+        return setWrappedText(new LabelImageConfigBuilder().setText(text).setFontScale(Game.getInstance().getAppInfoService().isPortraitMode() ? FontManager.getNormalBigFontDim() : FontManager.getBigFontDim()).setWrappedLineLabel(width));
+    }
+
+    public ButtonBuilder setContrast(Contrast contrast) {
+        this.contrast = contrast;
+        return this;
     }
 
     public ButtonBuilder setText(String text) {
-        centerTextImageColumnLabelImage = createTextTable(text, FontManager.getNormalFontDim());
+        float fontDim = FontManager.getNormalFontDim();
+        if (fontScale != null) {
+            fontDim = fontScale;
+        }
+        centerTextImageColumnLabelImage = createTextTable(text, fontDim);
+        return this;
+    }
+
+    public ButtonBuilder setFontScale(Float fontScale) {
+        this.fontScale = fontScale;
         return this;
     }
 
@@ -98,6 +117,11 @@ public class ButtonBuilder {
 
     public ButtonBuilder setDefaultButton() {
         buttonSkin = MainButtonSkin.DEFAULT;
+        return this;
+    }
+
+    public ButtonBuilder setTransparentButton() {
+        buttonSkin = MainButtonSkin.TRANSPARENT;
         return this;
     }
 
@@ -163,7 +187,7 @@ public class ButtonBuilder {
 
     public MyButton build() {
         processButtonTable();
-        MyButton myButton = new MyButton(getButtonSize(), buttonSkin);
+        MyButton myButton = new MyButton(getButtonSize(), buttonSkin == null ? MainButtonSkin.TRANSPARENT : buttonSkin, contrast);
         if (StringUtils.isNotBlank(buttonName)) {
             myButton.setName(buttonName);
         }
@@ -260,5 +284,15 @@ public class ButtonBuilder {
             }
         }
         return isTableEmpty;
+    }
+
+    protected LabelImage createTableLabelImage(String text, Res icon) {
+        return new LabelImage(new LabelImageConfigBuilder()
+                .setImage(icon)
+                .setWrappedLineLabel(getButtonSize().getWidth() - LabelImageConfigBuilder.DEFAULT_IMAGE_SIDE_DIMENSION * 2f)
+                .setMarginBetweenLabelImage(MainDimen.horizontal_general_margin.getDimen())
+                .setText(text)
+                .setAlignTextRight(true)
+                .build());
     }
 }

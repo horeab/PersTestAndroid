@@ -18,7 +18,10 @@ public enum MainResource implements Res {
     font_zh("fonts/font_zh.ttf", null),
     textureAtlas("skin/skin.atlas", TextureAtlas.class),
 
+    inappurchase_background("backgrounds/inappurchase_background.png", Texture.class),
     popup_background("backgrounds/popup_background.png", Texture.class),
+    red_background("backgrounds/red_background.png", Texture.class),
+    green_background("backgrounds/green_background.png", Texture.class),
     transparent_background("backgrounds/transparent_background.png", Texture.class),
 
     background_texture("general/background_texture.png", Texture.class),
@@ -37,9 +40,16 @@ public enum MainResource implements Res {
     btn_settings_down("buttons/btn_settings_down.png", Texture.class),
     btn_back_up("buttons/btn_back_up.png", Texture.class),
     btn_back_down("buttons/btn_back_down.png", Texture.class),
+    btn_back_up_white("buttons/btn_back_up_white.png", Texture.class),
+    btn_back_down_white("buttons/btn_back_down_white.png", Texture.class),
 
     sound_off("general/sound_off.png", Texture.class),
     crown("general/crown.png", Texture.class),
+    mug("general/mug.png", Texture.class),
+    press_finger("general/press_finger.png", Texture.class),
+    heart_full("general/heart_full.png", Texture.class),
+    lock("general/lock.png", Texture.class),
+    unlock("general/unlock.png", Texture.class),
     sound_on("general/sound_on.png", Texture.class),
 
     main_labels_cs("labels/main_labels_cs", I18NBundle.class),

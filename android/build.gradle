@@ -56,8 +56,8 @@ android {
 /////////////////////////////////////////////////////////////////////////////
         perstest {
             applicationIdSuffix ".perstest"
-            versionCode 3
-            versionName "1.11"
+            versionCode 4
+            versionName "1.2"
             dimension "game"
             manifestPlaceholders = [appIcon: "@drawable/perstest_icon"]
         }

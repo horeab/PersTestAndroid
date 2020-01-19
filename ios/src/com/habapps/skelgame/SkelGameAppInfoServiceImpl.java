@@ -34,6 +34,11 @@ public class SkelGameAppInfoServiceImpl implements AppInfoService {
     }
 
     @Override
+    public void removeAds() {
+        iosLauncher.removeAds();
+    }
+
+    @Override
     public String getAppName() {
         return iosLauncher.getGameProperties().getAppName();
     }
@@ -44,8 +49,8 @@ public class SkelGameAppInfoServiceImpl implements AppInfoService {
     }
 
     @Override
-    public void showPopupAd() {
-        iosLauncher.showPopupAd();
+    public void showPopupAd(Runnable afterClose) {
+        iosLauncher.showPopupAd(afterClose);
     }
 
     @Override
@@ -59,14 +64,10 @@ public class SkelGameAppInfoServiceImpl implements AppInfoService {
     }
 
     @Override
-    public boolean screenShotMode() {
+    public boolean isScreenShotMode() {
         return false;
     }
 
-    @Override
-    public boolean googleFacebookLoginEnabled() {
-        return false;
-    }
 
     @Override
     public String getImplementationGameResourcesFolder() {
@@ -85,9 +86,9 @@ public class SkelGameAppInfoServiceImpl implements AppInfoService {
 
     @Override
     public float gameScreenTopMargin() {
-        if (screenShotMode() ) {
+        if (isScreenShotMode()) {
             return 0;
         }
-        return iosLauncher.getSafeAreaInsets() ;
+        return iosLauncher.getSafeAreaInsets() + iosLauncher.getBannerAdHeight();
     }
 }

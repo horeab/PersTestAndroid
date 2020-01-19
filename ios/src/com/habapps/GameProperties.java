@@ -7,13 +7,13 @@ import libgdx.constants.GameIdEnum;
 public enum GameProperties {
 
     skelgame(
-            GameIdEnum.skelgame,
+            GameIdEnum.perstest,
             NSBundle.getMainBundle().getLocalizedString("language","en","InfoPlist"),
             NSBundle.getMainBundle().getLocalizedString("CFBundleDisplayName","en","InfoPlist"),
-            "ca-app-pub-9432399956064043~8530693221",
-            "ca-app-pub-9432399956064043/5904529883",
-            "ca-app-pub-9432399956064043/5712958192",
-            "ca-app-pub-9432399956064043/2703651470",
+            "ca-app-pub-9894292627655692~7529989512",
+            "ca-app-pub-9894292627655692/4107472020",
+            "ca-app-pub-9894292627655692/1591267123",
+            "ca-app-pub-9894292627655692/2794390354",
             "1479288929");
 
     private GameIdEnum gameIdEnum;

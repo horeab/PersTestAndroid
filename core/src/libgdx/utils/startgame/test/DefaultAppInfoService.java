@@ -11,12 +11,8 @@ public class DefaultAppInfoService implements AppInfoService {
     }
 
     @Override
-    public boolean googleFacebookLoginEnabled() {
-        return false;
-    }
-
-    @Override
-    public void showPopupAd() {
+    public void showPopupAd(Runnable afterClose) {
+        afterClose.run();
     }
 
     @Override
@@ -26,6 +22,11 @@ public class DefaultAppInfoService implements AppInfoService {
 
     @Override
     public void showRewardedVideoAd() {
+    }
+
+    @Override
+    public void removeAds() {
+
     }
 
     @Override
@@ -39,7 +40,7 @@ public class DefaultAppInfoService implements AppInfoService {
     }
 
     @Override
-    public boolean screenShotMode() {
+    public boolean isScreenShotMode() {
         return false;
     }
 

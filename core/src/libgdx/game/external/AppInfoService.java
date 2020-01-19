@@ -12,9 +12,9 @@ public interface AppInfoService {
 
     String getLanguage();
 
-    boolean googleFacebookLoginEnabled();
+    void showPopupAd(Runnable afterClose);
 
-    void showPopupAd();
+    void removeAds();
 
     void showRewardedVideoAd();
 
@@ -24,7 +24,7 @@ public interface AppInfoService {
 
     String getImplementationGameResourcesFolder();
 
-    boolean screenShotMode();
+    boolean isScreenShotMode();
 
     float gameScreenTopMargin();
 

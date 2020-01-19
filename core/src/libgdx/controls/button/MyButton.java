@@ -1,33 +1,38 @@
 package libgdx.controls.button;
 
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import libgdx.constants.Contrast;
 import libgdx.controls.TextTable;
 import libgdx.controls.label.MyLabel;
 import libgdx.game.Game;
-import libgdx.resources.FontManager;
 import libgdx.resources.ResourcesManager;
+import libgdx.utils.model.FontColor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MyButton extends TextButton {
 
-    MyButton(ButtonSize buttonSize, ButtonSkin buttonSkin) {
-        super(null, ResourcesManager.getSkin());
-        getStyle().font.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+    private ButtonSkin buttonSkin;
+    private Contrast contrast;
 
+    MyButton(ButtonSize buttonSize, ButtonSkin buttonSkin) {
+        this(buttonSize, buttonSkin, Contrast.LIGHT);
+    }
+
+    MyButton(ButtonSize buttonSize, ButtonSkin buttonSkin, Contrast contrast) {
+        super(null, ResourcesManager.getSkin());
+        this.contrast = contrast;
+        setButtonSkin(buttonSkin);
         if (buttonSize != null) {
             setWidth(buttonSize.getWidth());
             setHeight(buttonSize.getHeight());
         }
-        setButtonSkin(buttonSkin);
         clearChildren();
-
     }
 
     public String getText() {
@@ -49,13 +54,15 @@ public class MyButton extends TextButton {
     }
 
     public void setButtonSkin(ButtonSkin buttonSkin) {
+        this.buttonSkin = buttonSkin;
         TextButtonStyle buttonStyle = new TextButtonStyle(getStyle());
         buttonStyle.up = buttonSkin.getImgUp();
         buttonStyle.down = buttonSkin.getImgDown();
         buttonStyle.checked = buttonSkin.getImgChecked();
         buttonStyle.disabled = buttonSkin.getImgDisabled();
         if (buttonSkin.getButtonDisabledFontColor() != null) {
-            buttonStyle.disabledFontColor = buttonSkin.getButtonDisabledFontColor();
+            buttonStyle.font = Game.getInstance().getFontManager().getFont(buttonSkin.getButtonDisabledFontColor());
+//            buttonStyle.disabledFontColor = buttonSkin.getButtonDisabledFontColor().getColor().toColor();
         }
         setStyle(buttonStyle);
     }
@@ -65,12 +72,20 @@ public class MyButton extends TextButton {
         super.setStyle(style);
         List<MyLabel> labels = getCenterRowLabels();
         for (MyLabel label : labels) {
-            TextButtonStyle textButtonStyle = (TextButtonStyle) style;
             Label.LabelStyle labelStyle = new Label.LabelStyle();
-            labelStyle.font = Game.getInstance().getFontManager().getFont();
-            labelStyle.fontColor = isDisabled() ? textButtonStyle.disabledFontColor : textButtonStyle.fontColor;
+            FontColor buttonDisabledFontColor = buttonSkin.getButtonDisabledFontColor();
+            FontColor fontColor =
+                    isDisabled() ?
+                            buttonDisabledFontColor != null ? buttonDisabledFontColor : FontColor.BLACK
+                            : contrast == Contrast.LIGHT ? FontColor.BLACK : FontColor.WHITE;
+            labelStyle.font = Game.getInstance().getFontManager().getFont(fontColor);
+            labelStyle.fontColor = fontColor.getColor();
             label.setStyle(labelStyle);
         }
+    }
+
+    public ButtonSkin getButtonSkin() {
+        return buttonSkin;
     }
 
     public List<MyLabel> getCenterRowLabels() {

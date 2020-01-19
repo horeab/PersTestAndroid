@@ -2,6 +2,7 @@ package com.habapps;
 
 import com.badlogic.gdx.backends.iosrobovm.IOSApplication;
 import com.badlogic.gdx.backends.iosrobovm.IOSApplicationConfiguration;
+import com.badlogic.gdx.pay.ios.apple.PurchaseManageriOSApple;
 import com.habapps.skelgame.SkelGameAppInfoServiceImpl;
 
 import org.robovm.apple.coregraphics.CGRect;
@@ -21,8 +22,7 @@ import org.robovm.pods.google.mobileads.GADRequest;
 import org.robovm.pods.google.mobileads.GADRequestError;
 
 import libgdx.implementations.skel.SkelGame;
-import libgdx.utils.startgame.test.DefaultBillingService;
-import libgdx.utils.startgame.test.DefaultFacebookService;
+import libgdx.utils.Utils;
 
 public class IOSLauncher extends IOSApplication.Delegate {
 
@@ -30,6 +30,7 @@ public class IOSLauncher extends IOSApplication.Delegate {
     private boolean adsInitialized = false;
 
     private GameProperties gameProperties = GameProperties.skelgame;
+    private SkelGame game;
 
     private GADBannerView bannerAdview;
     private GADInterstitial interstitialAd;
@@ -44,14 +45,20 @@ public class IOSLauncher extends IOSApplication.Delegate {
         appInfoService = new SkelGameAppInfoServiceImpl(this);
         config.orientationLandscape = !appInfoService.isPortraitMode();
         config.orientationPortrait = appInfoService.isPortraitMode();
+        game = new SkelGame(
+                appInfoService);
+        game.purchaseManager = new PurchaseManageriOSApple();
         iosApplication = new IOSApplication(
-                new SkelGame(
-                        new DefaultFacebookService(),
-                        new DefaultBillingService(),
-                        appInfoService),
+                game,
 
                 config);
         return iosApplication;
+    }
+
+
+    public void removeAds() {
+        bannerAdview.setFrame(new CGRect(0, 0, 0, 0));
+        bannerAdview.setDelegate(null);
     }
 
     public float getBannerAdHeight() {
@@ -68,14 +75,14 @@ public class IOSLauncher extends IOSApplication.Delegate {
             UIView view = UIApplication.getSharedApplication().getKeyWindow().getRootViewController().getView();
             topMargin = view.getSafeAreaInsets().getBottom();
         }
-        return 0;
+        return Math.abs((float) topMargin);
     }
 
     @Override
     public boolean didFinishLaunching(UIApplication application, UIApplicationLaunchOptions launchOptions) {
         boolean finishLaunching = super.didFinishLaunching(application, launchOptions);
 
-        if (!appInfoService.screenShotMode() && !appInfoService.isProVersion()) {
+        if (!appInfoService.isScreenShotMode() && !Utils.isValidExtraContent()) {
             initializeAds(iosApplication);
         }
         return finishLaunching;
@@ -139,14 +146,15 @@ public class IOSLauncher extends IOSApplication.Delegate {
         return interstitialAd;
     }
 
-    public void showPopupAd() {
-        if (!appInfoService.screenShotMode() && !appInfoService.isProVersion()) {
+    public void showPopupAd(Runnable afterClose) {
+        if (!appInfoService.isScreenShotMode() && !Utils.isValidExtraContent()) {
             if (interstitialAd.isReady()) {
                 interstitialAd.present(UIApplication.getSharedApplication().getKeyWindow().getRootViewController());
             } else {
                 interstitialAd.loadRequest(createRequest());
             }
         }
+        afterClose.run();
     }
 
     private GADRequest createRequest() {

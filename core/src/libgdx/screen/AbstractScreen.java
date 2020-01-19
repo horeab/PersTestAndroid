@@ -39,7 +39,7 @@ public abstract class AbstractScreen<TScreenManager extends AbstractScreenManage
 
     public AbstractScreen() {
         contentStage = new Stage(new ExtendViewport(ScreenDimensionsManager.getScreenWidth(), ScreenDimensionsManager.getScreenHeight()));
-        backgroundStage = new Stage(new ExtendViewport(ScreenDimensionsManager.getScreenWidth(), ScreenDimensionsManager.getScreenHeight()));
+        backgroundStage = new Stage(new ExtendViewport(ScreenDimensionsManager.getExternalDeviceWidth(), ScreenDimensionsManager.getExternalDeviceHeight()));
         backgroundColor = Game.getInstance().getSubGameDependencyManager().getScreenBackgroundColor();
         myPopupManager = new MyPopupManager(this);
         myNotificationPopupManager = new MyNotificationPopupManager(this);
@@ -51,6 +51,10 @@ public abstract class AbstractScreen<TScreenManager extends AbstractScreenManage
 
     public boolean isLoading() {
         return getStage().getRoot().findActor(AbstractScreenManager.LOADING_LABEL_NAME) != null;
+    }
+
+    public AbstractScreen getAbstractScreen() {
+        return this;
     }
 
     public Group getRoot() {
@@ -74,6 +78,7 @@ public abstract class AbstractScreen<TScreenManager extends AbstractScreenManage
         if ((Gdx.input.isKeyPressed(Input.Keys.BACK) || Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) && !AbstractScreenManager.backAlreadyKeyPressed) {
             AbstractScreenManager.backAlreadyKeyPressed = true;
             if (myPopupManager.isPopupDisplayed()) {
+                myPopupManager.onBackKeyPress();
                 myPopupManager.hideAllDisplayedPopups();
             } else {
                 onBackKeyPress();
@@ -170,7 +175,8 @@ public abstract class AbstractScreen<TScreenManager extends AbstractScreenManage
 
     public abstract void buildStage();
 
-    public abstract void afterBuildStage();
+    public void afterBuildStage() {
+    }
 
     protected void displayNotifications() {
     }

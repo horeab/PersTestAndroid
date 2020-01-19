@@ -1,37 +1,38 @@
 package libgdx.utils;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.actions.RunnableAction;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 
+import libgdx.constants.Language;
+import libgdx.controls.MyTextField;
+import libgdx.controls.button.ButtonBuilder;
+import libgdx.controls.button.MyButton;
+import libgdx.controls.popup.MyPopup;
+import libgdx.controls.textfield.MyTextFieldBuilder;
+import libgdx.game.Game;
+import libgdx.game.external.AppInfoService;
+import libgdx.preferences.InAppPurchasesPreferencesService;
+import libgdx.resources.dimen.MainDimen;
+
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-
-import libgdx.controls.MyTextField;
-import libgdx.controls.button.ButtonBuilder;
-import libgdx.controls.button.MainButtonSkin;
-import libgdx.controls.button.MyButton;
-import libgdx.controls.label.MyWrappedLabel;
-import libgdx.controls.label.MyWrappedLabelConfigBuilder;
-import libgdx.controls.popup.MyPopup;
-import libgdx.game.Game;
-import libgdx.game.external.AppInfoService;
-import libgdx.resources.FontManager;
-import libgdx.resources.dimen.Dimen;
-import libgdx.resources.dimen.MainDimen;
-import libgdx.screen.AbstractScreen;
 
 
 public class Utils {
@@ -48,6 +49,34 @@ public class Utils {
             }
         }
         return lst;
+    }
+
+    public static boolean isValidExtraContent() {
+        return Game.getInstance().getAppInfoService().isProVersion() || new InAppPurchasesPreferencesService().isPurchased(Game.getInstance().getSubGameDependencyManager().getExtraContentProductId());
+    }
+
+    public static RunnableAction createRunnableAction(Runnable runnable) {
+        RunnableAction action = new RunnableAction();
+        action.setRunnable(runnable);
+        return action;
+    }
+
+    public static void fadeInActor(final Actor actor, float duration) {
+        actor.addAction(Actions.sequence(Actions.fadeOut(0f), Utils.createRunnableAction(new Runnable() {
+            @Override
+            public void run() {
+                actor.setVisible(true);
+            }
+        }), Actions.fadeIn(duration)));
+    }
+
+    public static RunnableAction createRemoveActorAction(final Actor actor) {
+        return createRunnableAction(new Runnable() {
+            @Override
+            public void run() {
+                actor.remove();
+            }
+        });
     }
 
     public static String getStringLetters(List<String> allStrings) {
@@ -95,30 +124,96 @@ public class Utils {
         return lastElement;
     }
 
-    public static void createChangeLangPopup() {
-        MyPopup popup = new MyPopup(Game.getInstance().getAbstractScreen()) {
-            @Override
-            protected void addButtons() {
-                final MyTextField myTextField = new MyTextField();
-                getButtonTable().add(myTextField).row();
-                MyButton changeLangBtn = new ButtonBuilder().setWrappedText("Change Lang to", MainDimen.horizontal_general_margin.getDimen() * 10)
-                        .setDefaultButton()
-                        .build();
-                changeLangBtn.addListener(new ClickListener() {
-                    @Override
-                    public void clicked(InputEvent event, float x, float y) {
-                        Game.getInstance().setNewContext(cloneAppInfoService(Game.getInstance().getAppInfoService(), myTextField.getTextField().getText()));
-                    }
-                });
-                addButton(changeLangBtn);
-            }
+    public static String getTitle() {
+        switch (Language.valueOf(Game.getInstance().getAppInfoService().getLanguage())) {
+            case cs:
+                return "xxx";
+            case da:
+                return "xxx";
+            case de:
+                return "xxx";
+            case el:
+                return "xxx";
+            case en:
+                return "xxx";
+            case es:
+                return "xxx";
+            case fi:
+                return "xxx";
+            case fr:
+                return "xxx";
+            case hi:
+                return "xxx";
+            case hr:
+                return "xxx";
+            case hu:
+                return "xxx";
+            case id:
+                return "xxx";
+            case it:
+                return "xxx";
+            case ja:
+                return "xxx";
+            case ko:
+                return "xxx";
+            case ms:
+                return "xxx";
+            case nl:
+                return "xxx";
+            case no:
+                return "xxx";
+            case pl:
+                return "xxx";
+            case pt:
+                return "xxx";
+            case ro:
+                return "xxx";
+            case ru:
+                return "xxx";
+            case sk:
+                return "xxx";
+            case sv:
+                return "xxx";
+            case th:
+                return "xxx";
+            case tr:
+                return "xxx";
+            case uk:
+                return "xxx";
+            case vi:
+                return "xxx";
+            case zh:
+                return "xxx";
+        }
+        return null;
+    }
 
-            @Override
-            protected String getLabelText() {
-                return "";
-            }
-        };
-        popup.addToPopupManager();
+    public static void createChangeLangPopup() {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ALT_LEFT)) {
+            MyPopup popup = new MyPopup(Game.getInstance().getAbstractScreen()) {
+                @Override
+                protected void addButtons() {
+                    final MyTextField myTextField = new MyTextFieldBuilder().build();
+                    getButtonTable().add(myTextField).row();
+                    MyButton changeLangBtn = new ButtonBuilder().setWrappedText("Change Lang to", MainDimen.horizontal_general_margin.getDimen() * 10)
+                            .setDefaultButton()
+                            .build();
+                    changeLangBtn.addListener(new ClickListener() {
+                        @Override
+                        public void clicked(InputEvent event, float x, float y) {
+                            Game.getInstance().setNewContext(cloneAppInfoService(Game.getInstance().getAppInfoService(), myTextField.getTextField().getText()));
+                        }
+                    });
+                    addButton(changeLangBtn);
+                }
+
+                @Override
+                protected String getLabelText() {
+                    return "";
+                }
+            };
+            popup.addToPopupManager();
+        }
     }
 
     private static AppInfoService cloneAppInfoService(final AppInfoService currentAppInfoService, final String newLang) {
@@ -134,18 +229,23 @@ public class Utils {
             }
 
             @Override
+            public void removeAds() {
+                currentAppInfoService.removeAds();
+            }
+
+            @Override
             public String getStoreAppId() {
                 return currentAppInfoService.getStoreAppId();
             }
 
             @Override
-            public boolean screenShotMode() {
-                return currentAppInfoService.screenShotMode();
+            public boolean isScreenShotMode() {
+                return currentAppInfoService.isScreenShotMode();
             }
 
             @Override
             public void showRewardedVideoAd() {
-                currentAppInfoService.screenShotMode();
+                currentAppInfoService.isScreenShotMode();
             }
 
             @Override
@@ -154,8 +254,8 @@ public class Utils {
             }
 
             @Override
-            public void showPopupAd() {
-                currentAppInfoService.showPopupAd();
+            public void showPopupAd(Runnable afterClose) {
+                currentAppInfoService.showPopupAd(afterClose);
             }
 
             @Override
@@ -186,11 +286,6 @@ public class Utils {
             @Override
             public boolean isProVersion() {
                 return currentAppInfoService.isProVersion();
-            }
-
-            @Override
-            public boolean googleFacebookLoginEnabled() {
-                return currentAppInfoService.googleFacebookLoginEnabled();
             }
 
             @Override

@@ -11,24 +11,31 @@ import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
-import org.apache.commons.lang3.StringUtils;
-
 import libgdx.controls.ScreenRunnable;
-import libgdx.controls.button.builders.BackButtonBuilder;
 import libgdx.controls.button.MyButton;
+import libgdx.controls.button.builders.BackButtonBuilder;
 import libgdx.controls.label.MyWrappedLabel;
 import libgdx.controls.label.MyWrappedLabelConfigBuilder;
 import libgdx.game.Game;
 import libgdx.graphics.GraphicUtils;
+import libgdx.resources.FontManager;
 import libgdx.resources.MainResource;
 import libgdx.resources.ResourcesManager;
 import libgdx.resources.dimen.MainDimen;
 import libgdx.screen.AbstractScreen;
 import libgdx.screen.AbstractScreenManager;
 import libgdx.utils.ScreenDimensionsManager;
+import libgdx.utils.Utils;
+
+import org.apache.commons.lang3.StringUtils;
+
+import java.util.ArrayList;
+import java.util.List;
+
 
 public abstract class MyPopup<TScreen extends AbstractScreen, TScreenManager extends AbstractScreenManager> extends Dialog implements Popup {
 
+    private List<Actor> actorsToFront = new ArrayList<>();
     private TScreen screen;
     protected TScreenManager screenManager = (TScreenManager) Game.getInstance().getScreenManager();
 
@@ -62,6 +69,9 @@ public abstract class MyPopup<TScreen extends AbstractScreen, TScreenManager ext
         return this;
     }
 
+    @Override
+    public void onBackKeyPress() {
+    }
 
     @Override
     public TScreen getScreen() {
@@ -97,12 +107,29 @@ public abstract class MyPopup<TScreen extends AbstractScreen, TScreenManager ext
         getButtonTable().add(btn).padBottom(MainDimen.vertical_general_margin.getDimen()).width(btn.getWidth()).height(btn.getHeight() * 1.05f).row();
     }
 
+    protected void addActorsToFront(Actor actor) {
+        getContentTable().getStage().getRoot().addActor(actor);
+        actorsToFront.add(actor);
+    }
+
+    protected List<Actor> getActorsToFront() {
+        return actorsToFront;
+    }
+
     protected abstract String getLabelText();
 
     protected abstract void addButtons();
 
     @Override
     public void hide() {
+        hide(Utils.createRunnableAction(new Runnable() {
+            @Override
+            public void run() {
+            }
+        }));
+    }
+
+    public void hide(final RunnableAction executeAfterHide) {
         super.hide();
         final MyPopup thisPopup = this;
         RunnableAction action = new RunnableAction();
@@ -112,12 +139,20 @@ public abstract class MyPopup<TScreen extends AbstractScreen, TScreenManager ext
                 getPopupManager().hidePopup(thisPopup);
             }
         });
-        addAction(Actions.sequence(Actions.delay(0.4f), action));
+        addAction(Actions.sequence(
+                Actions.delay(0.4f),
+                Utils.createRunnableAction(new Runnable() {
+                    @Override
+                    public void run() {
+                        getScreen().addAction(executeAfterHide);
+                    }
+                }),
+                action));
     }
 
     @Override
     public float getPrefWidth() {
-        return ScreenDimensionsManager.getScreenWidthValue(90);
+        return ScreenDimensionsManager.getScreenWidthValue(Game.getInstance().getAppInfoService().isPortraitMode() ? 90 : 50);
     }
 
     @Override
